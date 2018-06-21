@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.1" halcon_version="17.12">
+<procedure name="main">
+<interface/>
+<body>
+<c>* 本方法是基于图像相减和灰度投影的方法进行小K图提取</c>
+<c>* 但方法对于那些内部存在类似或相同的区域无法挑拣</c>
+<c></c>
+<c></c>
+<l>tuple_k_rows := [3,3,9,3,3,3,5,3,6,6,6,1,30,3,3,4,3,3,3,3,3,1,3,3,9]</l>
+<l>tuple_k_cols := [4,5,4,1,1,8,7,4,8,8,8,8,5 ,8,1,8,6,8,4,1,3,6,2,4,4]</l>
+<c></c>
+<l>dev_update_off ()</l>
+<l>list_files ('C:/Users/Administrator/Desktop/三倍图/Good/good', ['files','follow_links','recursive'], ImageFiles)</l>
+<l>tuple_regexp_select (ImageFiles, ['\\.(tif|tiff|gif|bmp|jpg|jpeg|jp2|png|pcx|pgm|ppm|pbm|xwd|ima)$','ignore_case'], ImageFiles)</l>
+<l>for IndexImage := 1 to |ImageFiles|  by 1 </l>
+<l>    dev_close_window ()</l>
+<l>    k_rows :=  tuple_k_rows[IndexImage-1]</l>
+<l>    k_cols :=  tuple_k_cols[IndexImage-1]    </l>
+<l>    read_image (Image, 'C:/Users/Administrator/Desktop/三倍图/Good/good/'+IndexImage)</l>
+<l>    get_image_size (Image, Width, Height)</l>
+<l>    dev_open_window (0, 0, Width/4, Height/4, 'black', WindowHandle)</l>
+<l>    dev_display (Image)</l>
+<c>    </c>
+<l>    count_seconds (t1)</l>
+<c>    </c>
+<l>    convert_image_type (Image, Image, 'uint2')</l>
+<c>    </c>
+<l>    rgb1_to_gray (Image, GrayImage)</l>
+<c>    </c>
+<l>    Height_Rect := Height / (8*k_rows)</l>
+<c>    </c>
+<l>    dev_set_draw ('margin')</l>
+<c>    </c>
+<l>    count_seconds (t1)</l>
+<c>    </c>
+<c>    * 获取第一部分</c>
+<l>    gen_rectangle2 (Rectangle1, Height/2, Width/2, 0, Width/2, Height_Rect)</l>
+<c>    </c>
+<l>    reduce_domain (GrayImage, Rectangle1, ImageReduced)</l>
+<l>    crop_domain (ImageReduced, ImagePart1)</l>
+<l>    get_image_size (ImagePart1, Width2, Height2)</l>
+<c>    * 获取第二部分</c>
+<l>    gen_rectangle2 (Rectangle2, Height/2-3*Height_Rect, Width/2, 0, Width/2, Height_Rect)</l>
+<l>    reduce_domain (GrayImage, Rectangle2, ImageReduced1)</l>
+<l>    crop_domain (ImageReduced1, ImagePart2)</l>
+<l>    zoom_image_size (ImagePart2, ImagePart2, Width2, Height2, 'constant')</l>
+<c>    </c>
+<c>    *获取第三块矩形，增加鲁棒性</c>
+<l>    gen_rectangle2 (Rectangle3, Height/2+3*Height_Rect, Width/2, 0, Width/2, Height_Rect)</l>
+<l>    reduce_domain (GrayImage, Rectangle3, ImageReduced2)</l>
+<l>    crop_domain (ImageReduced2, ImagePart3)</l>
+<l>    zoom_image_size (ImagePart3, ImagePart3, Width2, Height2, 'constant')</l>
+<c>    </c>
+<l>    abs_diff_image (ImagePart1, ImagePart2, ImageSub, 0.1)</l>
+<l>    abs_diff_image (ImagePart2, ImagePart3, ImageSub_1, .1)</l>
+<l>    abs_diff_image (ImagePart1, ImagePart3, ImageSub_2, .1)</l>
+<c>    </c>
+<l>    add_image (ImageSub, ImageSub_1, ImageResult, 1, 0)</l>
+<l>    add_image (ImageResult, ImageSub_2, ImageResult1, 1, 0)</l>
+<c>    </c>
+<l>    get_image_size (ImageResult1, Width1, Height1)</l>
+<c>    </c>
+<l>    rgb1_to_gray (ImageResult1, GraySub)</l>
+<c>    * 先获取大的ROI</c>
+<c>    **********************************************************************************</c>
+<l>    rectange_width := 10</l>
+<c>    </c>
+<l>    rect_col :=0</l>
+<c>    * 记录下上一个的位置</c>
+<l>    prev_width := 0</l>
+<c>    </c>
+<l>    dev_set_color ('yellow')</l>
+<c>    </c>
+<c>    * 设置矩形的高度为GraySub的高度</c>
+<l>    get_image_size (GraySub, Width4, Height4)</l>
+<c>    </c>
+<l>    emphasize (GraySub, ImageEmphasize, Width4, Height4, 1)</l>
+<c>    </c>
+<c>    * In the first one, calculate the grayhisto.</c>
+<l>    gray_projections (ImageEmphasize, ImageEmphasize, 'simple', HorProjection, VertProjection)</l>
+<l>    create_funct_1d_array (VertProjection, Function)</l>
+<l>    smooth_funct_1d_gauss (Function, 2, SmoothedFunction)</l>
+<l>    derivate_funct_1d (SmoothedFunction, 'first', FirstDerivative)</l>
+<l>    zero_crossings_funct_1d (FirstDerivative, ZeroCrossings)</l>
+<l>    derivate_funct_1d (SmoothedFunction, 'second', SecondDerivative)</l>
+<l>    tuple_max (SmoothedFunction, Max)</l>
+<c>    </c>
+<c>    </c>
+<c>    *定义阈值为高度的一半</c>
+<l>    Threshold := Max/6</l>
+<c>    *先除去左右两端的</c>
+<l>    tuple_greater_equal_elem (SmoothedFunction, Threshold, Greatereq)</l>
+<c>    *找到两端点</c>
+<l>    tuple_find_first (Greatereq, 1, left_part_value)</l>
+<l>    tuple_find_last (Greatereq, 1, right_part_value)</l>
+<c>    </c>
+<c>    *定义左右偏移量，减去偏移量</c>
+<l>    move_dis := (right_part_value - left_part_value)/50</l>
+<c>    </c>
+<l>    left_part_value := left_part_value - move_dis</l>
+<l>    right_part_value:=right_part_value + move_dis</l>
+<c>    </c>
+<c>    *******TEST***********</c>
+<l>*     dev_set_color ('blue')</l>
+<l>*     disp_line (WindowHandle, 0, left_part_value, Height, left_part_value)</l>
+<l>*     disp_line (WindowHandle, 0, right_part_value, Height, right_part_value)</l>
+<l>*     dev_set_color ('yellow')</l>
+<c>    ********TEST END******</c>
+<c>    </c>
+<c>    *确定了左右边界之后，根据左右边界，确定小K图的大致宽度</c>
+<l>    small_K_width := (right_part_value - left_part_value - (k_cols) * 50 ) / k_cols</l>
+<c>    </c>
+<c>    *储存除去两端剩下的</c>
+<l>    middle_parts :=[]</l>
+<l>    middle_Y_parts :=[]</l>
+<c>    </c>
+<c>    *取中间部分的几个最小值</c>
+<l>    for points_loc:=0 to |ZeroCrossings|-1 by 1</l>
+<l>        if(ZeroCrossings[points_loc]&gt;left_part_value and ZeroCrossings[points_loc] &lt; right_part_value )</l>
+<c>            *计算中间部分点的值</c>
+<l>            get_y_value_funct_1d (SmoothedFunction, ZeroCrossings[points_loc], 'constant', Y_value)</l>
+<l>            middle_Y_parts:=[middle_Y_parts,Y_value]</l>
+<l>            middle_parts := [middle_parts,ZeroCrossings[points_loc]]</l>
+<l>        endif</l>
+<l>    endfor</l>
+<c>    </c>
+<l>    tuple_sort (middle_Y_parts, Sorted)</l>
+<c>    </c>
+<c>    * 记录当前检测点的位置坐标</c>
+<l>    sort_point_index := 0</l>
+<c>    *先记录第一个，稍后与其比较</c>
+<l>    tuple_find_first (middle_Y_parts, Sorted[0], index_0)</l>
+<l>    good_index := [middle_parts[index_0]]</l>
+<c>    </c>
+<c>    * 记录符合条件点的个数 </c>
+<l>    points_num := 0</l>
+<l>    search_num := 1</l>
+<c>    </c>
+<c>    * 这里之所以这样设置，为了加上两边界，5列6边界</c>
+<l>    while(points_num &lt;= k_cols + 1) </l>
+<l>        tuple_find_first (middle_Y_parts, Sorted[search_num], sort_point_index)</l>
+<c>        *如果一条线与数组中的所有线都距离较远</c>
+<l>        good_label := 1</l>
+<l>        for index:=0 to |good_index|-1 by 1</l>
+<l>            if(abs(middle_parts[sort_point_index]-good_index[index])&lt;small_K_width - 100 )</l>
+<l>                good_label := 0</l>
+<l>                break</l>
+<l>            endif</l>
+<l>        endfor    </l>
+<l>        if(good_label=1)</l>
+<l>            good_index := [good_index,middle_parts[sort_point_index]]</l>
+<l>            points_num := points_num + 1    </l>
+<l>        endif</l>
+<c>        * 为了防止找不到报错，这里设置如下</c>
+<l>        if(search_num&lt;|Sorted|-1)</l>
+<l>            search_num := search_num + 1 </l>
+<l>        else</l>
+<l>            break</l>
+<l>        endif    </l>
+<l>    endwhile</l>
+<c>    </c>
+<c>    * 推算出左/右边界坐标</c>
+<l>    tuple_sort (good_index, good_index_sorted)</l>
+<c>    * 计算均值</c>
+<c>    </c>
+<l>    if(k_cols&gt;=2)</l>
+<l>        mean_width := []</l>
+<l>        for index:=0 to |good_index_sorted| - 2 by 1</l>
+<l>            mean_width := [mean_width, good_index_sorted[index+1] - good_index_sorted[index] ]</l>
+<l>        endfor</l>
+<c>        </c>
+<l>        tuple_mean (mean_width, Mean_Width)</l>
+<c>        </c>
+<l>        leftest_pos := good_index_sorted[1] - Mean_Width</l>
+<l>        rightest_pos := good_index_sorted[|good_index_sorted|-2] + Mean_Width</l>
+<c>        </c>
+<c>        *这里替换左右边界</c>
+<l>        tuple_replace (good_index_sorted, 0, leftest_pos, good_index_sorted)</l>
+<l>        tuple_replace (good_index_sorted, |good_index_sorted|-1, rightest_pos, good_index_sorted)</l>
+<c>        </c>
+<l>        col0 := good_index_sorted[0]</l>
+<l>        col1 := good_index_sorted[1]  </l>
+<c>        </c>
+<l>    else</l>
+<c>       * 如果是单列 赋值到点    </c>
+<l>        col0:=left_part_value</l>
+<l>        col1:=right_part_value   </l>
+<l>    endif</l>
+<c>    </c>
+<c>    * 显示</c>
+<l>    if(|good_index_sorted|&gt;2)</l>
+<l>        for points_num:=0 to |good_index_sorted|-1 by 1</l>
+<l>             disp_line (WindowHandle, 0, good_index_sorted[points_num], Height, good_index_sorted[points_num])</l>
+<l>        endfor   </l>
+<l>    endif</l>
+<c>    </c>
+<c>    *************TEST BEGIN*************************</c>
+<c>    * 重新绘制左右边界线</c>
+<l>*     dev_set_color ('red')</l>
+<l>*     disp_line (WindowHandle, 0, leftest_pos, Height, leftest_pos)</l>
+<l>*     disp_line (WindowHandle, 0, rightest_pos, Height, rightest_pos)</l>
+<c>    *************TEST END******************************</c>
+<c>    </c>
+<c>    </c>
+<c>    *******************************************************************************</c>
+<c>    *******************************************************************************</c>
+<c>    </c>
+<c>    * 确定起作用的宽度 </c>
+<l>    Valid_Width :=  right_part_value - left_part_value</l>
+<c>    </c>
+<l>    Width_Rect := left_part_value + ( Valid_Width ) / 2</l>
+<c>    </c>
+<c>    * 获取第一部分</c>
+<l>    gen_rectangle2 (Rectangle3, Height/2, Width_Rect, 0, Valid_Width/(k_cols*6), Height/2 )</l>
+<l>    reduce_domain (GrayImage, Rectangle3, ImageReduced3)</l>
+<l>    crop_domain (ImageReduced3, ImagePart3)</l>
+<l>    get_image_size (ImagePart3, Width3, Height3)</l>
+<c>    </c>
+<c>    * 获取第二部分</c>
+<l>    gen_rectangle2 (Rectangle4, Height/2, Width_Rect-2*Valid_Width/(k_cols*6) + 10 , 0, Valid_Width/(k_cols*5), Height/2 )</l>
+<l>    reduce_domain (GrayImage, Rectangle4, ImageReduced4)</l>
+<l>    crop_domain (ImageReduced4, ImagePart4)</l>
+<l>    zoom_image_size (ImagePart4, ImagePart4, Width3, Height3, 'constant')</l>
+<c>    </c>
+<c>    * 获取第三部分</c>
+<l>    gen_rectangle2 (Rectangle5, Height/2, Width_Rect+2*Valid_Width/(k_cols*6) - 10 , 0, Valid_Width/(k_cols*5), Height/2 )</l>
+<l>    reduce_domain (GrayImage, Rectangle5, ImageReduced5)</l>
+<l>    crop_domain (ImageReduced5, ImagePart5)</l>
+<l>    zoom_image_size (ImagePart5, ImagePart5, Width3, Height3, 'constant')</l>
+<c>    </c>
+<l>    abs_diff_image (ImagePart3, ImagePart4, ImageSub2, 0.1)</l>
+<l>    abs_diff_image (ImagePart5, ImagePart4, ImageSub2_1, .1)</l>
+<l>    abs_diff_image (ImagePart3, ImagePart5, ImageSub2_2, .1)</l>
+<c>    </c>
+<l>    add_image (ImageSub2, ImageSub2_1, ImageResult_2, 1, 0)</l>
+<l>    add_image (ImageResult_2, ImageSub2_2, ImageResult2, 1, 0)</l>
+<c>    </c>
+<l>    rgb1_to_gray (ImageResult2, GraySub2)</l>
+<l>    emphasize (GraySub2, ImageEmphasize1, Width3, Height3, 1)</l>
+<c>    * 灰度投影</c>
+<l>    gray_projections (ImageEmphasize1, ImageEmphasize1, 'simple', HorProjection1, VertProjection1)</l>
+<l>    create_funct_1d_array (HorProjection1, Function1)</l>
+<l>    smooth_funct_1d_gauss (Function1, 2, SmoothedFunction1)</l>
+<l>    derivate_funct_1d (SmoothedFunction1, 'first', FirstDerivative1)</l>
+<l>    zero_crossings_funct_1d (FirstDerivative1, ZeroCrossings1)</l>
+<c>    </c>
+<c></c>
+<c>    *储存除去两端剩下的</c>
+<l>    middle_parts1 :=[]</l>
+<l>    middle_Y_parts1 :=[]</l>
+<c>    </c>
+<c>    *取中间部分的几个最小值</c>
+<l>    for points_loc:=0 to |ZeroCrossings1|-1 by 1</l>
+<c>    *计算中间部分点的值</c>
+<l>        if(ZeroCrossings1[points_loc]&gt;5)</l>
+<l>        get_y_value_funct_1d (SmoothedFunction1, ZeroCrossings1[points_loc], 'constant', Y_value1)</l>
+<l>        middle_Y_parts1:=[middle_Y_parts1,Y_value1]</l>
+<l>        middle_parts1 := [middle_parts1,ZeroCrossings1[points_loc]]</l>
+<l>        endif</l>
+<l>    endfor</l>
+<c>    </c>
+<l>    tuple_sort (middle_Y_parts1, Sorted1)</l>
+<c>    </c>
+<c>    * 记录符合条件点的个数</c>
+<l>    points_num := 0</l>
+<c>    * 记录当前检测点的位置坐标</c>
+<l>    sort_point_index1 := 0</l>
+<c>    *先记录第一个，稍后与其比较</c>
+<l>    tuple_find_first (middle_Y_parts1, Sorted1[0], index_0)</l>
+<l>    good_index1 := [middle_parts1[index_0]]</l>
+<c>    </c>
+<l>    search_num1 := 1</l>
+<c>    </c>
+<c>    * 有时候需要减去2，有时候需要减去1</c>
+<c>    </c>
+<l>    while(points_num&lt;k_rows-2) </l>
+<l>        tuple_find_first (middle_Y_parts1, Sorted1[search_num1], sort_point_index1)</l>
+<c>        *如果一条线与数组中的所有线都距离较远</c>
+<l>        good_label1 := 1</l>
+<l>        for index:=0 to |good_index1|-1 by 1</l>
+<l>            if(abs(middle_parts1[sort_point_index1]-good_index1[index])&lt;100)</l>
+<l>                good_label1 := 0</l>
+<l>                break</l>
+<l>            endif</l>
+<l>        endfor</l>
+<c>        </c>
+<l>        if(good_label1=1)</l>
+<l>            good_index1 := [good_index1,middle_parts1[sort_point_index1]]</l>
+<l>*             disp_line (WindowHandle, middle_parts1[sort_point_index1], 0, middle_parts1[sort_point_index1],Width)</l>
+<l>            points_num := points_num + 1    </l>
+<l>        endif</l>
+<c>        * 为了防止找不到报错，这里设置如下</c>
+<l>        if(search_num1&lt;|Sorted1|-1)</l>
+<l>            search_num1 := search_num1 + 1 </l>
+<l>        else</l>
+<l>            break</l>
+<l>        endif</l>
+<c>    </c>
+<l>    endwhile</l>
+<c>    </c>
+<c>    * 推算出上、下边界坐标</c>
+<l>    tuple_sort (good_index1, good_index1_sorted)</l>
+<c>    * 计算均值</c>
+<c>    </c>
+<l>    if(k_rows&gt;2)</l>
+<l>        mean_height := []</l>
+<l>        for index:=0 to |good_index1_sorted| - 2 by 1</l>
+<l>            mean_height := [mean_height, good_index1_sorted[index+1] - good_index1_sorted[index] ]</l>
+<l>        endfor</l>
+<c>        </c>
+<l>        tuple_mean (mean_height, Mean_Height)</l>
+<c>        </c>
+<c>        * 判断如果均值与估值相差太大</c>
+<l>        gu_value := Height/k_rows</l>
+<l>        if((Mean_Height-gu_value)/gu_value &gt; 0.3 )</l>
+<c>            * 说明计算的有问题</c>
+<c>            * 再加一个</c>
+<l>            while(search_num1&lt;|Sorted1|-1)</l>
+<l>                tuple_find_first (middle_Y_parts1, Sorted1[search_num1], sort_point_index1)</l>
+<l>                good_label1 := 1</l>
+<l>                for index:=0 to |good_index1|-1 by 1</l>
+<l>                    if(abs(middle_parts1[sort_point_index1]-good_index1[index])&lt;100)</l>
+<l>                        good_label1 := 0</l>
+<l>                        break</l>
+<l>                    endif</l>
+<l>                endfor</l>
+<l>                if(good_label1=1)</l>
+<l>                    good_index1 := [good_index1,middle_parts1[sort_point_index1]]</l>
+<l>                    break  </l>
+<l>                endif       </l>
+<l>                search_num1 := search_num1 + 1</l>
+<l>            endwhile</l>
+<l>        endif</l>
+<c>        * 即使距离估计正确，个数有可能估计错 </c>
+<c>        </c>
+<c>        </c>
+<l>        tuple_sort (good_index1, good_index1_sorted)    </l>
+<c>        </c>
+<l>        row0 := good_index1_sorted[0]</l>
+<l>        row1 := good_index1_sorted[1]  </l>
+<c>        </c>
+<l>    else</l>
+<c>       * 如果是单行 赋值到点 </c>
+<c>       * 找到一阶导数不为0的首点，和一阶导数为0的末点</c>
+<l>       tuple_replace (FirstDerivative1, [0:5], 0, FirstDerivativeReplaced)</l>
+<l>       tuple_greater_elem (FirstDerivativeReplaced, 0.05, Greater0)</l>
+<l>       tuple_find_first (Greater0, 1, Index0)</l>
+<l>       row0:=Index0</l>
+<c>       </c>
+<l>       tuple_find_last (Greater0, 1, Index1)</l>
+<c>       </c>
+<l>       row1:=Index1</l>
+<l>    endif</l>
+<c>    </c>
+<c>    </c>
+<c>    * 显示</c>
+<l>    for points_num:=0 to |good_index1|-1 by 1</l>
+<l>        if(|good_index1|!=1)</l>
+<l>            disp_line (WindowHandle,good_index1_sorted[points_num],0, good_index1_sorted[points_num],Width)</l>
+<l>        endif</l>
+<l>    endfor</l>
+<c>    </c>
+<c>    * 显示计算时间</c>
+<l>    set_display_font (WindowHandle, 16, 'mono', 'true', 'false')</l>
+<l>    count_seconds (t2)</l>
+<l>    write_string (WindowHandle, 'Time is: '+(t2-t1)*1000 +' ms ')</l>
+<c>       </c>
+<c>    * 显示小K图</c>
+<c>    </c>
+<l>    gen_rectangle1 (Rectangle, row0, col0, row1, col1)</l>
+<l>    reduce_domain (Image, Rectangle, SmallKReduced)</l>
+<l>    crop_domain (SmallKReduced, SmallK)</l>
+<l>    get_image_size (SmallK, WidthK, HeightK)</l>
+<l>    dev_open_window_fit_image (SmallK, 0, 0, -1, -1, WindowHandle1)</l>
+<l>    dev_display (SmallK)</l>
+<c>    </c>
+<l>    stop ()</l>
+<c></c>
+<l>    dev_close_window ()</l>
+<c>    </c>
+<l>endfor</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
