@@ -1,0 +1,65 @@
+
+    read_image (Image, FilePath)   
+    get_image_size (Image, Width, Height) 
+    dev_open_window (0, 0, Width/2, Height/2, 'black', WindowHandle)   
+    dev_display (Image)
+      
+    rgb1_to_gray (Image, GrayImage)
+    
+    * 获取条形码区域
+    gen_rectangle1 (ROI_1, 26, 2395, 251.337, 2481.5)  
+
+    reduce_domain (GrayImage, ROI_1, ImageReduced1)
+    
+    area_center (ROI_1, Area, RowCenter, ColCenter)
+    
+    count_seconds (t1)
+    
+    crop_domain (ImageReduced1, ImageReduced)
+    
+    get_image_size (ImageReduced, Width1, Height1)
+   
+    
+    * 傅里叶变换Width1应为偶数，否则耗时较长
+    if(Width1%2!=0)
+        Width1 := Width1 + 1
+        zoom_image_size (ImageReduced, ImageReduced, Width1, Height1, 'constant')
+    endif
+    
+    
+    invert_image (ImageReduced, ImageInvert)
+    mult_image (ImageReduced, ImageReduced, ImageResult, 0.009, 0)
+    
+    * 正弦带通滤波器去噪
+    gen_sin_bandpass (ImageFilter, 0.9, 'none', 'rft', Width1, Height1)
+
+    rft_generic (ImageResult, ImageFFT, 'to_freq', 'none', 'complex', Width1) 
+
+    convol_fft (ImageFFT, ImageFilter, ImageConvol) 
+
+    rft_generic (ImageConvol, Lines, 'from_freq', 'none', 'byte', Width1)
+
+    * rl,4,5 ; wl is good
+    texture_laws (Image, ImageTexture, 'sl', 1, 3)
+    
+划痕、油污、瑕疵，常用的方法有傅里叶变换和Blob分析。
+
+1.表面划痕
+
+invert_image(Image,ImageInvert1) 
+mult_image(ImageInvert1, ImageInvert1, ImageResult,0.01, 0) 
+
+gen_sin_bandpass (ImageBandpass, 0.6, 'none', 'rft', Width, Height)
+rft_generic (ImageResult, ImageFFT, 'to_freq', 'none', 'complex', Width) 
+convol_fft (ImageFFT, ImageBandpass, ImageConvol) 
+rft_generic (ImageConvol, Lines, 'from_freq', 'n', 'byte', Width)
+
+texture_laws (Lines, ImageTexture, 'el',3, 5)
+
+为更好的突出前景，一般情况下要求背景颜色较深，可以先用invert_image算子进行灰度值转换。之后的图像相乘，是将对比度进一步扩大。
+
+生成一个正弦形状的带通滤波器，可以去除图像中的噪声。然后傅里叶变换凸显出要检测的划痕。
+
+texture_laws是纹理滤波，适用于布匹表面的划痕，是整个算法的关键所在。
+    
+    
