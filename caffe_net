@@ -1,0 +1,7 @@
+  (1) Copy the default config
+      模型就用程序自带的caffenet模型，位置在 models/bvlc_reference_caffenet/文件夹下,
+      将需要的两个配置文件，复制到myfile文件夹内
+  
+      sudo cp models/bvlc_reference_caffenet/train_val.prototxt examples/myfile/
+  
+      (2) Modify config
