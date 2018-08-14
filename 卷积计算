@@ -1,0 +1,19 @@
+Yes, that function computes the convolution correctly. You can check this using scipy.signal.convolve2d
+
+import numpy as np
+from scipy.signal import convolve2d
+
+kernel = np.array([(1, 1, -1), (1, 0, -1), (1, -1, -1)])
+file = np.ones((5,5))
+
+x = convolve2d(file, kernel)
+print x
+Which gives:
+
+[[ 1.  2.  1.  1.  1.  0. -1.]
+ [ 2.  3.  1.  1.  1. -1. -2.]
+ [ 3.  3.  0.  0.  0. -3. -3.]
+ [ 3.  3.  0.  0.  0. -3. -3.]
+ [ 3.  3.  0.  0.  0. -3. -3.]
+ [ 2.  1. -1. -1. -1. -3. -2.]
+ [ 1.  0. -1. -1. -1. -2. -1.]]
