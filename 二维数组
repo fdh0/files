@@ -1,0 +1,19 @@
+
+static  char strInnerTypeName[20][50]=          // 内部算法类型名列表
+{
+	"内部算法名一",
+	"内部算法名二",
+	"内部算法名三"
+};
+static BOOL bInnerTypeStudyFlag[20]=          // 对应算法类型名是否支持学习
+{
+	TRUE,
+	TRUE,
+	FALSE
+};
+static BOOL bInnerTypeUPDlgFlag[20]=           // 对应算法类型名是否可弹学习对话框
+{
+	FALSE,
+	TRUE,
+	FALSE
+};
