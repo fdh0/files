@@ -1,0 +1,227 @@
+
+typedef struct _ALG_MODEL_IMAGE
+{
+	// 标准图像
+	HObject HImgGoldRMax,  HImgGoldRMin;
+	HObject HImgGoldGMax,  HImgGoldGMin;
+	HObject HImgGoldBMax,  HImgGoldBMin;
+	// 训练时使用
+	HObject HImgTrainRMax, HImgTrainRMin;
+	HObject HImgTrainGMax, HImgTrainGMin;
+	HObject HImgTrainBMax, HImgTrainBMin;
+	// 检测时使用
+	HObject HImgCheckRMax, HImgCheckRMin;
+	HObject HImgCheckGMax, HImgCheckGMin;
+	HObject HImgCheckBMax, HImgCheckBMin;
+
+	HObject HImgRefR,  HImgRefG,  HImgRefB;
+	HObject HImgEdgeR, HImgEdgeG, HImgEdgeB;
+	HObject HImgModelMax, HImgModelMin;		//模板
+	
+	// 压缩后的图像模板 [5/2/2013 baiyy]
+	HObject HImgGoldRMax_Z,  HImgGoldRMin_Z;
+	HObject HImgGoldGMax_Z,  HImgGoldGMin_Z;
+	HObject HImgGoldBMax_Z,  HImgGoldBMin_Z;
+
+	HObject HImgTrainRMax_Z, HImgTrainRMin_Z;
+	HObject HImgTrainGMax_Z, HImgTrainGMin_Z;
+	HObject HImgTrainBMax_Z, HImgTrainBMin_Z;
+
+	HObject HImgCheckRMax_Z, HImgCheckRMin_Z;
+	HObject HImgCheckGMax_Z, HImgCheckGMin_Z;
+	HObject HImgCheckBMax_Z, HImgCheckBMin_Z; 
+
+	HObject HImgModelMax_Z, HImgModelMin_Z;
+
+	// 纤维丝训练用(特殊训练方式)
+	HObject HImgTrainRXWS,HRealImgTrainRXWS;
+	HObject HImgTrainGXWS,HRealImgTrainGXWS;
+	HObject HImgTrainBXWS,HRealImgTrainBXWS;
+	HObject HImgRXWS,HImgGXWS,HImgBXWS;
+	HObject HRegRXWS,HRegGXWS,HRegBXWS;
+
+	//小文字骨架模板
+	HObject HSkeRegXWZ;
+	//小文字提取区域
+	HObject HRegXWZ;
+
+	//表格模板
+	s_sTableModel sTableModel;
+
+	_ALG_MODEL_IMAGE()
+	{
+		GenEmptyObj(&HImgGoldRMax);GenEmptyObj(&HImgGoldRMin);
+		GenEmptyObj(&HImgGoldGMax);GenEmptyObj(&HImgGoldGMin);
+		GenEmptyObj(&HImgGoldBMax);GenEmptyObj(&HImgGoldBMin);
+
+		GenEmptyObj(&HImgTrainRMax);GenEmptyObj(&HImgTrainRMin);
+		GenEmptyObj(&HImgTrainGMax);GenEmptyObj(&HImgTrainGMin);
+		GenEmptyObj(&HImgTrainBMax);GenEmptyObj(&HImgTrainBMin);
+
+		GenEmptyObj(&HImgCheckRMax);GenEmptyObj(&HImgCheckRMin);
+		GenEmptyObj(&HImgCheckGMax);GenEmptyObj(&HImgCheckGMin);
+		GenEmptyObj(&HImgCheckBMax);GenEmptyObj(&HImgCheckBMin);
+
+		GenEmptyObj(&HImgModelMax);GenEmptyObj(&HImgModelMin);
+		GenEmptyObj(&HImgGoldRMax_Z);GenEmptyObj(&HImgGoldRMin_Z);
+		GenEmptyObj(&HImgGoldGMax_Z);GenEmptyObj(&HImgGoldGMin_Z);
+		GenEmptyObj(&HImgGoldBMax_Z);GenEmptyObj(&HImgGoldBMin_Z);
+
+		GenEmptyObj(&HImgTrainRMax_Z);GenEmptyObj(&HImgTrainRMin_Z);
+		GenEmptyObj(&HImgTrainGMax_Z);GenEmptyObj(&HImgTrainGMin_Z);
+		GenEmptyObj(&HImgTrainBMax_Z);GenEmptyObj(&HImgTrainBMin_Z);
+
+		GenEmptyObj(&HImgCheckRMax_Z);GenEmptyObj(&HImgCheckRMin_Z);
+		GenEmptyObj(&HImgCheckGMax_Z);GenEmptyObj(&HImgCheckGMin_Z);
+		GenEmptyObj(&HImgCheckBMax_Z);GenEmptyObj(&HImgCheckBMin_Z);
+
+		GenEmptyObj(&HImgModelMax_Z); GenEmptyObj(&HImgModelMin_Z);
+		//GenEmptyObj(&HImgGrayTrainMin);GenEmptyObj(&HImgGrayTrainMax);
+		GenEmptyObj(&HImgTrainRXWS);GenEmptyObj(&HRealImgTrainRXWS);
+		GenEmptyObj(&HImgTrainGXWS);GenEmptyObj(&HRealImgTrainGXWS);
+		GenEmptyObj(&HImgTrainBXWS);GenEmptyObj(&HRealImgTrainBXWS);
+		GenEmptyObj(&HImgRXWS);GenEmptyRegion(&HRegRXWS);
+		GenEmptyObj(&HImgGXWS);GenEmptyRegion(&HRegGXWS);
+		GenEmptyObj(&HImgBXWS);GenEmptyRegion(&HRegBXWS);
+		//  [2/15/2017 zl]
+		GenEmptyObj(&HSkeRegXWZ);GenEmptyObj(&HRegXWZ);
+	}
+	_ALG_MODEL_IMAGE& operator=(const _ALG_MODEL_IMAGE& ASC)
+	{
+		HImgGoldRMax = ASC.HImgGoldRMax;
+		HImgGoldRMin = ASC.HImgGoldRMin;
+		HImgGoldGMax = ASC.HImgGoldGMax;  
+		HImgGoldGMin = ASC.HImgGoldGMin;
+		HImgGoldBMax = ASC.HImgGoldBMax;
+		HImgGoldBMin = ASC.HImgGoldBMin;
+		HImgTrainRMax = ASC.HImgTrainRMax;
+		HImgTrainRMin = ASC.HImgTrainRMin;
+		HImgTrainGMax = ASC.HImgTrainGMax;
+		HImgTrainGMin = ASC.HImgTrainGMin;
+		HImgTrainBMax = ASC.HImgTrainBMax;
+		HImgTrainBMin = ASC.HImgTrainBMin;
+		HImgCheckRMax = ASC.HImgCheckRMax;
+		HImgCheckRMin = ASC.HImgCheckRMin;
+		HImgCheckGMax = ASC.HImgCheckGMax;
+		HImgCheckGMin = ASC.HImgCheckGMin;
+		HImgCheckBMax = ASC.HImgCheckBMax;
+		HImgCheckBMin = ASC.HImgCheckBMin;
+
+		HImgRefR = ASC.HImgRefR;
+		HImgRefG = ASC.HImgRefG;
+		HImgRefB = ASC.HImgRefB;
+		HImgEdgeR = ASC.HImgEdgeR;
+		HImgEdgeG = ASC.HImgEdgeG;
+		HImgEdgeB = ASC.HImgEdgeB;
+		HImgModelMax = ASC.HImgModelMax;
+		HImgModelMin = ASC.HImgModelMin;		//模板
+
+		// 压缩后的图像模板 [5/2/2013 baiyy]
+		HImgGoldRMax_Z = ASC.HImgGoldRMax_Z;
+		HImgGoldRMin_Z = ASC.HImgGoldRMin_Z;
+		HImgGoldGMax_Z = ASC.HImgGoldGMax_Z;  
+		HImgGoldGMin_Z = ASC.HImgGoldGMin_Z;
+		HImgGoldBMax_Z = ASC.HImgGoldBMax_Z; 
+		HImgGoldBMin_Z = ASC.HImgGoldBMin_Z;
+
+		HImgTrainRMax_Z = ASC.HImgTrainRMax_Z;
+		HImgTrainRMin_Z = ASC.HImgTrainRMin_Z;
+		HImgTrainGMax_Z = ASC.HImgTrainGMax_Z;
+		HImgTrainGMin_Z = ASC.HImgTrainGMin_Z;
+		HImgTrainBMax_Z = ASC.HImgTrainBMax_Z;
+		HImgTrainBMin_Z = ASC.HImgTrainBMin_Z;
+
+		HImgCheckRMax_Z = ASC.HImgCheckRMax_Z;
+		HImgCheckRMin_Z = ASC.HImgCheckRMin_Z;
+		HImgCheckGMax_Z = ASC.HImgCheckGMax_Z;
+		HImgCheckGMin_Z = ASC.HImgCheckGMin_Z;
+		HImgCheckBMax_Z = ASC.HImgCheckBMax_Z;
+		HImgCheckBMin_Z = ASC.HImgCheckBMin_Z; 
+
+		HImgModelMax_Z = ASC.HImgModelMax_Z;
+		HImgModelMin_Z = ASC.HImgModelMin_Z;
+
+		// 纤维丝训练用(特殊训练方式)
+		HImgTrainRXWS = ASC.HImgTrainRXWS;
+		HRealImgTrainRXWS = ASC.HRealImgTrainRXWS;
+		HImgTrainGXWS = ASC.HImgTrainGXWS;
+		HRealImgTrainGXWS = ASC.HRealImgTrainGXWS;
+		HImgTrainBXWS = ASC.HImgTrainBXWS;
+		HRealImgTrainBXWS = ASC.HRealImgTrainBXWS;
+		HImgRXWS = ASC.HImgRXWS;
+		HImgGXWS = ASC.HImgGXWS;
+		HImgBXWS = ASC.HImgBXWS;
+		HRegRXWS = ASC.HRegRXWS;
+		HRegGXWS = ASC.HRegGXWS;
+		HRegBXWS = ASC.HRegBXWS;
+
+		//小文字骨架模板
+		HSkeRegXWZ = ASC.HSkeRegXWZ;
+		//小文字提取区域
+		HRegXWZ = ASC.HRegXWZ;
+		sTableModel = ASC.sTableModel;
+		return *this;
+
+	}
+
+	~_ALG_MODEL_IMAGE()
+	{
+	}
+	void lst_vec_clear()
+	{
+		GenEmptyObj(&HImgGoldRMax);GenEmptyObj(&HImgGoldRMin);
+		GenEmptyObj(&HImgGoldGMax);GenEmptyObj(&HImgGoldGMin);
+		GenEmptyObj(&HImgGoldBMax);GenEmptyObj(&HImgGoldBMin);
+
+		GenEmptyObj(&HImgTrainRMax);GenEmptyObj(&HImgTrainRMin);
+		GenEmptyObj(&HImgTrainGMax);GenEmptyObj(&HImgTrainGMin);
+		GenEmptyObj(&HImgTrainBMax);GenEmptyObj(&HImgTrainBMin);
+
+		GenEmptyObj(&HImgCheckRMax);GenEmptyObj(&HImgCheckRMin);
+		GenEmptyObj(&HImgCheckGMax);GenEmptyObj(&HImgCheckGMin);
+		GenEmptyObj(&HImgCheckBMax);GenEmptyObj(&HImgCheckBMin);
+		GenEmptyObj(&HImgModelMax);GenEmptyObj(&HImgModelMin);
+		GenEmptyObj(&HImgGoldRMax_Z);GenEmptyObj(&HImgGoldRMin_Z);
+		GenEmptyObj(&HImgGoldGMax_Z);GenEmptyObj(&HImgGoldGMin_Z);
+		GenEmptyObj(&HImgGoldBMax_Z);GenEmptyObj(&HImgGoldBMin_Z);
+
+		GenEmptyObj(&HImgTrainRMax_Z);GenEmptyObj(&HImgTrainRMin_Z);
+		GenEmptyObj(&HImgTrainGMax_Z);GenEmptyObj(&HImgTrainGMin_Z);
+		GenEmptyObj(&HImgTrainBMax_Z);GenEmptyObj(&HImgTrainBMin_Z);
+
+		GenEmptyObj(&HImgCheckRMax_Z);GenEmptyObj(&HImgCheckRMin_Z);
+		GenEmptyObj(&HImgCheckGMax_Z);GenEmptyObj(&HImgCheckGMin_Z);
+		GenEmptyObj(&HImgCheckBMax_Z);GenEmptyObj(&HImgCheckBMin_Z);
+		GenEmptyObj(&HImgModelMax_Z);GenEmptyObj(&HImgModelMin_Z);
+
+		GenEmptyObj(&HImgTrainRXWS);GenEmptyObj(&HRealImgTrainRXWS);
+		GenEmptyObj(&HImgTrainGXWS);GenEmptyObj(&HRealImgTrainGXWS);
+		GenEmptyObj(&HImgTrainBXWS);GenEmptyObj(&HRealImgTrainBXWS);
+		GenEmptyObj(&HImgRXWS);GenEmptyRegion(&HRegRXWS);
+		GenEmptyObj(&HImgGXWS);GenEmptyRegion(&HRegGXWS);
+		GenEmptyObj(&HImgBXWS);GenEmptyRegion(&HRegBXWS);
+		//  [2/15/2017 zl]
+		GenEmptyObj(&HSkeRegXWZ);GenEmptyObj(&HRegXWZ);
+		sTableModel.lst_vec_clear();
+	}
+}sModelImage;
+
+
+
+作为参数的&是表示引用，引用其实就是对象的别名，使用按引用传递参数可以提高效率。因为按值传递会生成临时变量。
+
+引用其实就是对象的别名，它并不另开辟内存空间，所以节省了内存且提高了效率。
+return *this;就可以返回对象本身，而不会产生一个新的对象做为返回值
+
+ operator是C++的关键字，它和运算符一起使用，表示一个运算符函数，理解时应将operator=整体上视为一个函数名。
+ 
+ 一、为什么使用操作符重载？
+对于系统的所有操作符，一般情况下，只支持基本数据类型和标准库中提供的class，
+对于用户自己定义的class，如果想支持基本操作，比如比较大小，判断是否相等，等等，
+则需要用户自己来定义关于这个操作符的具体实现。比如，判断两个人是否一样大，我们默认的规则是按照其年龄来比较，
+所以，在设计person 这个class的时候，我们需要考虑操作符==，而且，根据刚才的分析，比较的依据应该是age。
+那么为什么叫重载呢？这是因为，在编译器实现的时候，已经为我们提供了这个操作符的基本数据类型实现版本，
+但是现在他的操作数变成了用户定义的数据类型class，所以，需要用户自己来提供该参数版本的实现。
+
+https://blog.csdn.net/qq_28171461/article/details/78824959
+
