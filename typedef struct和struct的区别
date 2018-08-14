@@ -1,9 +1,5 @@
 typedef struct和struct的区别：
 
- 
-
- 
-
 　　　　typedef struct tagMyStruct
 　　　　{ 
 　　　　　int iNum;
@@ -12,9 +8,6 @@ typedef struct和struct的区别：
 
 　　　　上面的tagMyStruct是标识符，MyStruct是变量类型（相当于（int,char等））。
 
- 
-
- 
 
 　　　　这语句实际上完成两个操作：
 
