@@ -1,0 +1,7 @@
+ Compute_Image_mean
+  计算均值并保存, 图片减去均值再训练，会提高训练速度和精度。因此，一般都会有这个操作。
+ 
+     sudo build/tools/compute_image_mean examples/myfile/img_train_lmdb examples/myfile/mean.binaryproto
+ 
+     compute_image_mean带两个参数，第一个参数是lmdb训练数据位置，第二个参数设定均值文件的名字及保存路径。
+     运行成功后，会在 examples/myfile/ 下面生成一个mean.binaryproto的均值文件。
