@@ -1,0 +1,7 @@
+   build/tools/convert_imageset \
+          --shuffle \
+          --resize_height=256 \
+          --resize_width=256 \
+          /home/xxx/caffe/data/re/ \
+          $MY/train.txt \
+          $MY/img_train_lmdb
