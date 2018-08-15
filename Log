@@ -14,7 +14,7 @@ https://github.com/fdh0/Files/blob/master/easylogging%2B%2B.cpp
 #include "afxdialogex.h"
 
 #include "easylogging++.h"
-INITIALIZE EASYLOGGINGPP
+INITIALIZE_EASYLOGGINGPP
 
 4. 使用
 LOG(INFO) << "starting...";
