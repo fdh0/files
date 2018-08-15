@@ -1,5 +1,53 @@
 有时候我们写程序,遇到问题,或者想查看程序的运行过程,就需要写日志了
 
+写这篇文章时，最新的 Easylogging++ 版本是V9.80，
+如果编译器不支持C++11的话，是无法编译的。
+对于Visual Studio系列来说，必须是VS2012或以上版本才行。
+如果还停留在VS2010、VS2008，VS2005的小伙伴，可以考虑使用EasyLogging++ V8.91版本。
+需要注意的是，不同的版本在使用方法和功能支持上都会有所差异。
+
+==============================================VS2010==============================================
+1. 下载文件到工程目录下
+https://github.com/fdh0/Files/blob/master/easylogging%2B%2B(V8.91).h
+就这一个文件，加入到头文件中就行
+
+2. 在.h文件的开头加上  #include "StdAfx.h"
+
+3. 在你的.cpp文件开头加上：
+
+  #include "easylogging++.h"
+  _INITIALIZE_EASYLOGGINGPP
+
+  类似于下面：
+    /*********************/
+    #include "stdafx.h"
+    #include "AlgLabPrintQI.h"
+    #include "Check.h"
+    #include "PropDlg.h"
+    #include "ParaDlg.h"
+    #include "ModelOperate.h"
+
+    // Add Log: Feng 08-15/18
+    #include "easylogging++.h"
+    _INITIALIZE_EASYLOGGINGPP
+
+4. 使用
+  	  LINFO << "hv_CheckDifference_Max_time:" << hv_CheckDifference_Max_Sum[0].D();
+			LINFO << "hv_CheckDifference_Min_time:" << hv_CheckDifference_Max_Sum[0].D();   
+ 
+      当然，还有其他的     LERROR
+      
+      
+5. 查看
+
+      你的日志文件在哪里呢？
+      
+      （1）在你的当前目录下
+      （2）在你的大工程文件配置好的根目录下logs/myeasylog.log
+      
+      
+==============================================VS2012==============================================
+
 将两个文件下载到工程文件目录下
 
 1.Easylogging++.h
