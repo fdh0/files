@@ -1,0 +1,20 @@
+有时候我们写程序,遇到问题,或者想查看程序的运行过程,就需要写日志了
+
+将两个文件下载到工程文件目录下
+
+1.Easylogging++.h
+https://github.com/fdh0/Files/blob/master/easylogging%2B%2B.h
+
+2.Easylogging++.cpp
+https://github.com/fdh0/Files/blob/master/easylogging%2B%2B.cpp
+
+3. 在你的实现文件中加上几行声明和引用
+/* Sao.cpp */
+#include "stdafx.h"
+#include "afxdialogex.h"
+
+#include "easylogging++.h"
+INITIALIZE EASYLOGGINGPP
+
+4. 使用
+LOG(INFO) << "starting...";
