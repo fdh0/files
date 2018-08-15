@@ -1,0 +1,39 @@
+
+			HTuple hv_t1_CheckDifference_Max,hv_t1_CheckDifference_Min;
+      
+      for(int i=1;i<=hXWZNum[0].I();i++)      //[12/28/2017 wk]小文字检测速度优化
+			{
+				htMinAreaMQ=10000000;
+				htMinAreaMN=10000000;
+				SelectObj(hConnectionXWZReg,&hoRegSel,i);
+				
+				// TEST,保存显示的区域
+				CString FileName;
+				FileName.Format("%sReg-%d_MaxModel_Z.bmp", 
+					"D://XWZ//", i);
+				
+				WriteObject(hoRegSel,HTuple(FileName));
+
+				//********** Add Time Log:Feng/08/15
+				CountSeconds(&hv_t1_CheckDifference_Max);
+
+				CheckDifference(hMQCheckImage,hImgModelMax,&hSingleReg1,"diff_outside",
+					-255,nLThresh,0,0,0);
+				//***************
+				CountSeconds(&hv_t2_CheckDifference_Max);
+
+				hv_CheckDifference_Max_time = hv_CheckDifference_Max_time.TupleConcat((hv_t2_CheckDifference_Max-hv_t1_CheckDifference_Max)*1000);
+
+				CopyObj(hSingleReg1,&hMinErrRegMQ,1,-1);
+				CopyObj(hSingleReg,&hMinErrRegMN,1,-1);
+
+				HObject hErrorTmp;
+				Union2(hMinErrRegMQ,hMinErrRegMN,&hErrorTmp);
+				Union2(hErrorTmp,hErrorReg,&hErrorReg);
+
+			}
+//***************TEST BEGIN**********将算子运行时间写入到日志文件中
+			TupleSum(hv_CheckDifference_Max_time,&hv_CheckDifference_Max_Sum);
+
+			LINFO << "hv_CheckDifference_Max_time:" << hv_CheckDifference_Max_Sum[0].D();
+
