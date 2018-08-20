@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.1" halcon_version="13.0.1">
+<procedure name="main">
+<interface/>
+<body>
+<l>dev_update_off()</l>
+<l>dev_close_window ()</l>
+<c></c>
+<l>read_image (Image, '/home/feng/Music/截图_2018-08-15_21-05-15.png')</l>
+<l>get_image_size (Image, Width, Height)</l>
+<l>dev_open_window_fit_image (Image, 0, 0, -1, -1, WindowHandle)</l>
+<l>set_display_font (WindowHandle, 16, 'mono', 'true', 'false')</l>
+<l>dev_set_draw ('margin')</l>
+<c></c>
+<l>count_seconds (t1)</l>
+<c></c>
+<l>rgb1_to_gray (Image, GrayImage)</l>
+<c></c>
+<l>FilterMask3 :=[3,3,.3,-1,0,1,0,0,0,1,0,-1]</l>
+<c></c>
+<l>FilterMask5 :=[5,5,2,-1,2,0,-2,-1,2,4,0,-4,-2,0,0,0,0,0,-2,-4,0,4,2,-1,-2,0,2,1]</l>
+<c></c>
+<c>* This is the best</c>
+<c></c>
+<l>FilterMask1 := [1,3,.3,-1,0,1]</l>
+<c></c>
+<l>convol_image (GrayImage, ImageResult1, FilterMask1, 'mirrored')</l>
+<c></c>
+<l>* texture_laws (GrayImage, ImageTexture, 'ee', 2, 5)</l>
+<c></c>
+<c>* Blob</c>
+<c></c>
+<l>binary_threshold (ImageResult1, Region, 'smooth_histo', 'light', UsedThreshold)</l>
+<c></c>
+<l>connection (Region, ConnectedRegions)</l>
+<c></c>
+<l>select_shape (ConnectedRegions, SelectedRegions, 'area', 'and', 2, 99999)</l>
+<c></c>
+<l>union1 (SelectedRegions, RegionUnion)</l>
+<c></c>
+<l>smallest_rectangle1 (RegionUnion, Row1, Column1, Row2, Column2)</l>
+<l>gen_rectangle1 (Rectangle, Row1, Column1, Row2, Column2)</l>
+<c></c>
+<l>count_seconds (t2)</l>
+<c></c>
+<c>* Display</c>
+<l>dev_display (Image)</l>
+<l>dev_display (Rectangle)</l>
+<l>set_tposition (WindowHandle, 20, 0)</l>
+<l>write_string (WindowHandle, 'Time cost is: '+(t2-t1)*1000+' ms')</l>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
