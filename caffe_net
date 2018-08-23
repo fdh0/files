@@ -5,3 +5,43 @@
       sudo cp models/bvlc_reference_caffenet/train_val.prototxt examples/myfile/
   
       (2) Modify config
+      
+name: "CaffeNet"
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mirror: true
+    crop_size: 227
+    mean_file: "examples/myfile/mean.binaryproto"
+  }
+  data_param {
+    source: "examples/myfile/img_train_lmdb"
+    batch_size: 256
+    backend: LMDB
+  }
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    mirror: false
+    crop_size: 227
+    mean_file: "examples/myfile/mean.binaryproto"
+  }
+  data_param {
+    source: "examples/myfile/img_test_lmdb"
+    batch_size: 50
+    backend: LMDB
+  }
+}
