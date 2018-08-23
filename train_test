@@ -1,0 +1,1 @@
+sudo build/tools/caffe train -solver examples/myfile/solver.prototxt
