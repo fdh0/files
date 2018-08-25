@@ -1,6 +1,6 @@
 #!/bin/bash
 name=0
-for files in `ls --file-type *.jpg`
+for files in `ls --file-type *.jpg *.png *.jpeg *.bmp`
 do
     # 指定后缀名
     ext=".jpg"
