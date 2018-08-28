@@ -1,0 +1,17 @@
+How to use the KNN?
+	(1) When to use it?
+	It is not recommanded to use it.
+	First, it's too slow in predict stage
+	Second, it's result is not so good
+
+	(2) How to use it?
+	    test_tuple :=[[1,4],[1,5],[5,1],[5,2]]
+    
+	    create_class_knn (2, KNNHandle)
+	    add_sample_class_knn (KNNHandle, test_tuple, Width1)
+	    train_class_knn (KNNHandle, [], [])
+	    set_params_class_knn (KNNHandle, ['method','k'], ['neighbors_distance',10])
+
+	    classify_class_knn (KNNHandle, [2,3], Result, Rating)
+	    
+	    clear_class_knn (KNNHandle)
