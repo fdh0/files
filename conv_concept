@@ -1,0 +1,32 @@
+What's is the CNN?
+	1. The propose of the CNN?
+		To subtract the feature of the image.
+	2. How to substact the feature?
+ 		By the operation of convolution.
+		
+	3. What's the convolution?
+		Different filters can detect different features.
+		In the convolution filters, if the feature is similar, its effects will be enlarged.
+		
+	4. What's the difference between the BP and CNN networks?
+
+		The input in the BP networks is usually a vector.
+		And, the input in the CNN is always a image.
+		So, we must reduce the dimension of the input to reduce time and calculation amount.
+		
+		However, the basic of the operations is similar:
+		(1) The unput x, dot mulity weight W, and the bias
+			W(T)*x + b
+		(2) ADD together
+		(3) non linear function (ReLU)
+		However, The cnn will have to reduce its dimension
+		(4) Pooling operation(Sub Sampling)
+			Select the max value in the part of the sample image
+			Stride 2
+			From 4X4 to 2X2
+	5. Whats the application of Conv?
+		edges detection
+		sharpen
+		Blur
+		...
+	6. 
