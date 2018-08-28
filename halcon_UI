@@ -1,0 +1,31 @@
+How to add a UI by C# for halcon?
+ 	Preview:
+	Export program from Halcon:
+		(1) c#-HALCON/.NET
+		(2) program
+		(3) None of 3 are selected
+		(4) Single File
+		(5) Use Export Template
+		(6) UTF-8
+		(7) Export
+
+
+	1. Open VS
+	2. select .Net 4;
+	   Windows widget application 
+	3. View-toolbox-Right click; -select object-
+		.Net Framewoek
+		Halcon/bin/dotnet35/halcondotnet.dll
+	4. Get the "HWindow Control"
+	5. Add a button 
+	6. Double Click
+	7. Add such programs:
+        
+	private void button1_Click(object sender, EventArgs e)
+        {
+            HDevelopExport HD = new HDevelopExport();
+            HD.RunHalcon(hWindowControl1.HalconWindow);
+        }
+
+	8. Debug-Any CPU
+	9. Run!
