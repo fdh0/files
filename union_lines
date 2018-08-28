@@ -1,0 +1,53 @@
+* This program shows how to detect defects (scratches) in
+* an inhomogeneously illuminated surface by filtering in
+* the frequency domain.
+* First, a suitable bandpass filter is created. Then, the
+* input image is fourier transformed and filtered in the
+* frequency domain, so that high frequency information is
+* enhanced. Finally, it is transformed back to the
+* spatial domain and the enhanced defects are post-processed
+* by morphology.
+* 
+dev_update_off ()
+dev_close_window ()
+read_image (Image, 'surface_scratch')
+invert_image (Image, ImageInverted)
+get_image_size (Image, Width, Height)
+dev_open_window (0, 0, Width, Height, 'black', WindowHandle)
+set_display_font (WindowHandle, 16, 'mono', 'true', 'false')
+dev_display (Image)
+* 
+* Optimize the speed of the fast fourier transform
+* Message := 'Optimize the speed of the fast fourier transform.'
+* Message[1] := 'Please wait...'
+* disp_message (WindowHandle, Message, 'window', 12, 12, 'black', 'true')
+* optimize_rft_speed (Width, Height, 'standard')
+* disp_continue_message (WindowHandle, 'black', 'true')
+* stop ()
+* 
+* Enhance the scratches by filtering in the frequency domain
+gen_sin_bandpass (ImageBandpass, 0.4, 'none', 'rft', Width, Height)
+rft_generic (ImageInverted, ImageFFT, 'to_freq', 'none', 'complex', Width)
+convol_fft (ImageFFT, ImageBandpass, ImageConvol)
+rft_generic (ImageConvol, Lines, 'from_freq', 'n', 'byte', Width)
+* 
+* Segment the scratches by using morphology
+threshold (Lines, Region, 5, 255)
+connection (Region, ConnectedRegions)
+select_shape (ConnectedRegions, SelectedRegions, 'area', 'and', 5, 5000)
+dilation_circle (SelectedRegions, RegionDilation, 5.5)
+union1 (RegionDilation, RegionUnion)
+reduce_domain (Image, RegionUnion, ImageReduced)
+lines_gauss (ImageReduced, LinesXLD, 0.8, 3, 5, 'dark', 'false', 'bar-shaped', 'false')
+union_collinear_contours_xld (LinesXLD, UnionContours, 40, 3, 3, 0.2, 'attr_keep')
+select_shape_xld (UnionContours, SelectedXLD, 'contlength', 'and', 15, 1000)
+gen_region_contour_xld (SelectedXLD, RegionXLD, 'filled')
+union1 (RegionXLD, RegionUnion)
+dilation_circle (RegionUnion, RegionScratches, 10.5)
+* 
+* Display the results
+dev_set_draw ('margin')
+dev_set_line_width (3)
+dev_set_colored (12)
+dev_display (Image)
+dev_display (RegionScratches)
