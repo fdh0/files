@@ -1,0 +1,13 @@
+list_files ('D:/产品图-单开/无排废/日化类（洗护）-索芙特透明-东莞顺通-裁图偏、排废找不到----', ['files','follow_links','recursive'], ImageFiles)
+tuple_regexp_select (ImageFiles, ['\\.(tif|tiff|gif|bmp|jpg|jpeg|jp2|png|pcx|pgm|ppm|pbm|xwd|ima)$','ignore_case'], ImageFiles)
+
+for Index := 0 to |ImageFiles| - 1 by 1
+    FilePath := ImageFiles[Index]
+    
+    read_image (Image, FilePath)
+    dev_close_window ()
+    dev_set_window (3600)
+    get_image_size (Image, Width1, Height1)
+    dev_open_window (0, 0, Width1/2, Height1/2, 'black', WindowHandle)
+    dev_display (Image)
+endfor
