@@ -2,6 +2,8 @@
           --shuffle \
           --resize_height=256 \
           --resize_width=256 \
-          /home/xxx/caffe/data/re/ \
-          $MY/train.txt \
-          $MY/img_train_lmdb
+          /home/feng/caffe/data/train \
+          /home/feng/caffe/data/train.txt \
+         /home/feng/caffe/data/train/img_train_lmdb
+         
+         注意：最后生成的img_train_lmdb的路径要与上面的一致，在train的子目录下，然后你可以再取出来
