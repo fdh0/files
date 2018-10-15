@@ -1,0 +1,24 @@
+CMakeLists.txt
+    cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+    project(example-app)
+
+    find_package(Torch REQUIRED)
+
+    add_executable(example-app example-app.cpp)
+    target_link_libraries(example-app "${TORCH_LIBRARIES}")
+    set_property(TARGET example-app PROPERTY CXX_STANDARD 11)
+
+example-app.cpp
+
+    #include <torch/torch.h>
+    #include <iostream>
+
+    int main() {
+      at::Tensor tensor = torch::rand({2, 3});
+      std::cout << tensor << std::endl;
+    }
+
+
+cmake -DCMAKE_PREFIX_PATH=~/Downloads/libtorch
+make
+./example-app
