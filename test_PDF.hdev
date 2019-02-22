@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="18.05.0.1">
+<procedure name="main">
+<interface/>
+<body>
+<l>read_region (Region, 'D:/ho_InsecError.hobj')</l>
+<c></c>
+<l>read_region (Region1, 'D:/ho_InsecErrorMQ.hobj')</l>
+<c></c>
+<l>read_region (Region2, 'D:/HRegReduce.hobj')</l>
+<c></c>
+<l>read_region (Region3, 'D:/hMinErrRegMN.hobj')</l>
+<l>connection (Region3, ConnectedRegions)</l>
+<c></c>
+<l>read_region (Region11, 'D:/hErrorRegOrigin.hobj')</l>
+<c></c>
+<c></c>
+<l>read_region (Region4, 'D:/hMinErrRegMQ.hobj')</l>
+<c></c>
+<l>read_region (Region5, 'D:/hMajorBlobRegs.hobj')</l>
+<c></c>
+<l>select_shape (Region5, SelectedRegions, 'rectangularity', 'and', 0.1, 0.8)</l>
+<c></c>
+<l>read_region (Region6, 'D:/hErrorReg1.hobj')</l>
+<c></c>
+<l>read_region (Region7, 'D:/hImageBorder.hobj')</l>
+<c></c>
+<l>read_region (Region9, 'D:/hErrorReg.hobj')</l>
+<c></c>
+<l>read_region (Region99, 'D:/hErrorReg2.hobj')</l>
+<c></c>
+<c></c>
+<l>read_region (Region10, 'D:/hRealCheckRegion.hobj')</l>
+<c></c>
+<l>read_region (Region12, 'D:/hMajorBlobRegs0.hobj')</l>
+<c></c>
+<c></c>
+<c></c>
+<l>read_image (Image, 'D:/DHImgSoft/GCQISystem/Mission/NEW_DIAO_2/CameraImages/PDF_Model1.png')</l>
+<c></c>
+<l>binary_threshold (Image, Region8, 'max_separability', 'dark', UsedThreshold)</l>
+<l>erosion_circle (Region8, RegionErosion, 5)</l>
+<l>dilation_circle (Region8, RegionDilation, 5)</l>
+<l>difference (RegionDilation, RegionErosion, RegionDifference)</l>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
