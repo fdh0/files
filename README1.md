@@ -26,6 +26,20 @@
    <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26eESAW2HOAAgIjXlM174570.PNG?t" height="300" title="烟叶图像">
    </figure>  
 
+## 烟叶图像先分组，后定级
+
+
+   <figure class="half">
+  
+   <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26eD2ADjNJAAOWOGEioSQ719.PNG?t" height="300" title="烟叶图像">
+      <img src="   http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26dDaAXUsDAAEI-c-fdu4294.PNG?t" height="300" title="分组">
+         <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26dDqABnjoAAEY_Rz1scg776.PNG?t" height="300" title="分组">
+
+   </figure>  
+   
+   
+
+
 ## 注意事项
 
 1. 由于采用光流法，与之前的不同，需要调整变形系数。但具体调整多少，尚没有一个较好的定式，并且会出现校正过度的问题，因此调整参数是个问题。   ![](https://github.com/fdh0/files/blob/master/question.png?raw=true)
