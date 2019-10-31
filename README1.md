@@ -34,7 +34,7 @@ halconcpp.dll
 
    <figure class="half">
   
-   <img src="http://coding.daheng-imavision.com/s/5ccce30c-a49b-4497-9f0a-ed18fe8d1ae4?raw=true" height="300" title="软件主界面">
+   <img src="http://coding.daheng-imavision.com/s/5ccce30c-a49b-4497-9f0a-ed18fe8d1ae4" height="300" title="软件主界面">
    <img src="https://github.com/fdh0/files/blob/master/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20190214141852.jpg?raw=true" height="300" title="软件使用界面">
 
    </figure>  
