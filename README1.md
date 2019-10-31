@@ -4,39 +4,25 @@
 # BQ_PDF_Check  
   
 ![版本更新](https://img.shields.io/badge/build-passing-green.svg)
-[![版本更新](https://img.shields.io/badge/release-v4.4.8.6637-blue.svg)](http://coding.daheng-imavision.com/p/BQ_PDF_Check/git/blob/master/README.md#user-content-%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0)
 ![logo](https://img.shields.io/badge/license-MIT-9cf.svg)
 
 ## 简介 
 
-本项目是在线阵系统下，关于大变形票面检测的相关程序。
+本项目是针对烟叶项目，包括关于目前烟叶项目的论文，专利等，以及相关需要展开的研发计划任务，开发需求等。
 
-大变形的票面检测程序与之前的有所不同。之前的票面检测一般通过建立大小模板进行对比检测。
+## 前言
 
-而基于大变形的票面检测，则是根据光流法，计算模板图与实际图之间的光流矢量矩阵，通过与校正后的实际图对比，进行缺陷检测。
+根据国家标准，烟叶可以分为烤烟、晾晒烟、再造烟叶等大类，其中烤烟为最常见的类型。
 
+烤烟分级国家标准《烤烟GB 2635—92》规定了烤烟的技术要求、检验方法和验收规则等内容，是分级、收购、交接的依据。烤烟烟叶可以分为共8个正组、5个副组，在此 基础上还可根据烟叶的成熟度、叶片结构、身份、油分、色度、长度、残伤等七个外观品级因素分为42个级。
 
-## 先决条件
+目前，我国烟叶分级收购仍以人工为主，存在着劳动强度大、主观性强、工作效率低、分级标准不易掌握、分级精度不稳定等缺点，人工烟叶分级的主观性还造成了收购分级专家的灰色利益、烟农和收购方因分级不同意见引起的质量纠纷等问题。
 
-本程序是在 `Visual Studio 2010 `下生成的<B> DLL </B>动态链接库。  
-
-动态库名称：` AlgPrintQIX64.dll `   
-
-所需动态库文件:  
-``` 
-halconcpp.dll
-```
-系统配置文件:  对应动态库名算法默认配置文件夹下所有配置文件
-
-数据库文件:  无
-
-## 软件界面
+## 烟叶图像
 
    <figure class="half">
   
-   <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26eESAW2HOAAgIjXlM174570.PNG?t" height="300" title="软件主界面">
-   <img src="https://github.com/fdh0/files/blob/master/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20190214141852.jpg?raw=true" height="300" title="软件使用界面">
-
+   <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26eESAW2HOAAgIjXlM174570.PNG?t" height="300" title="烟叶图像">
    </figure>  
 
 ## 注意事项
