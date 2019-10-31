@@ -31,7 +31,7 @@
 
    <figure class="half">
   
- <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26eD2ADjNJAAOWOGEioSQ719.PNG?t" height="500" title="烟叶图像">
+ <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26eD2ADjNJAAOWOGEioSQ719.PNG?t" height="300" title="烟叶图像">
    
 ### 分组
 
@@ -51,7 +51,7 @@
 ### 难点
 <figure class="half">
   
- <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26dD2ANZe5AAB22rFWfUQ646.PNG?t" height="500" title="项目难点">
+ <img src="http://coding.daheng-imavision.com/api/~/group0/M00/00/44/fwAAAV26dD2ANZe5AAB22rFWfUQ646.PNG?t" height="300" title="项目难点">
 
    </figure>  
 ### 借鉴
