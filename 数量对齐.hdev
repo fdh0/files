@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hdevelop file_version="1.2" halcon_version="20.11.1.0">
+<procedure name="main">
+<interface/>
+<body>
+<l>dev_update_off ()</l>
+<c></c>
+<l>list_files ('E:/VIP-AI-4th/ObjectDetection/Projects/Gloves/images/VOC1202/train/images',\
+            'files', Files)</l>
+<c></c>
+<l>tuple_regexp_select (Files, '\\.bmp$', FilesBMP)</l>
+<c></c>
+<l>tuple_regexp_select (Files, '\\.txt$', FilesLabel)</l>
+<c></c>
+<l>tuple_length (FilesLabel, LengthLabel)</l>
+<l>tuple_length (FilesBMP, LengthBMP)</l>
+<c></c>
+<l>tuple_max2 (LengthBMP, LengthLabel, MaxNum)</l>
+<l>if(LengthLabel &gt; LengthBMP)  </l>
+<l>    for i:=0 to MaxNum - 1 by 1</l>
+<l>        label_name := FilesLabel[i]   </l>
+<l>        tuple_regexp_replace (label_name, '.txt', '.bmp', bmp_name)    </l>
+<l>        file_exists (bmp_name, FileExists)     </l>
+<l>        if  (FileExists)          </l>
+<l>        else</l>
+<l>            lost_bmp_name:=bmp_name</l>
+<l>            stop ()</l>
+<l>        endif</l>
+<l>    endfor</l>
+<l>else </l>
+<l>    if(LengthLabel &lt; LengthBMP)</l>
+<l>        for i:=0 to MaxNum - 1 by 1</l>
+<l>            file_name := FilesBMP[i]   </l>
+<l>            tuple_regexp_replace (file_name, '.bmp', '.txt', label_name)    </l>
+<l>            file_exists (label_name, FileExists)     </l>
+<l>            if  (FileExists)          </l>
+<l>            else</l>
+<l>                lost_label_name:=label_name</l>
+<l>                stop ()       </l>
+<l>            endif</l>
+<l>        endfor</l>
+<l>    endif</l>
+<l>endif</l>
+<c></c>
+<c></c>
+</body>
+<docu id="main">
+<parameters/>
+</docu>
+</procedure>
+</hdevelop>
